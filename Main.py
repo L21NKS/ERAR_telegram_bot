@@ -1,3 +1,5 @@
+import time
+import requests
 from dotenv import load_dotenv
 import os
 import sys
@@ -131,4 +133,17 @@ def main(message):
         handle_rating_steps(message)
         return
 
-bot.polling(none_stop=True, interval=0)
+
+
+while True:
+    try:
+        bot.polling(none_stop=True, interval=0, timeout=60)
+    except requests.exceptions.ReadTimeout:
+        print("ReadTimeout — переподключение...")
+        time.sleep(3)
+    except requests.exceptions.ConnectionError:
+        print("ConnectionError — переподключение...")
+        time.sleep(3)
+    except Exception as e:
+        print(f"Неожиданная ошибка: {e}")
+        time.sleep(3)
